@@ -1,0 +1,7 @@
+the run commands used:
+ 1. npm run dev - to run the react app
+ 2. node api/index.js - to run the particular backend file
+
+ now everytime you change the index.js express folder, the backend output doesnt change. 
+ You need to restart it everytime, for it to show a different output.
+ Since that is annoying and time consuming, we us "nodemon" so that it automatically refreshes, without having to restart it everytime.
