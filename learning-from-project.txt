@@ -4,4 +4,4 @@ the run commands used:
 
  now everytime you change the index.js express folder, the backend output doesnt change. 
  You need to restart it everytime, for it to show a different output.
- Since that is annoying and time consuming, we us "nodemon" so that it automatically refreshes, without having to restart it everytime.
+ Since that is annoying and time consuming, we use "nodemon" so that it automatically refreshes, without having to restart it everytime.
