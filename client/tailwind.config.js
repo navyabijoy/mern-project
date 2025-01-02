@@ -6,6 +6,14 @@ export default {
   ],
   theme: {
     extend: {},
+    colors: {
+      blush: '#FE828C',   // Blush Pink
+      burgundy: '#800020', // Burgundy
+      gold: '#FFD700',     // Gold
+      taupe: '#9E9E9E',   // Taupe
+      coral: '#f2cfcb',    // Coral
+      mint: '#A3D5D3'     // Mint
+    },
   },
   plugins: [],
 }
