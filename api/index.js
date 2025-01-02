@@ -1,9 +1,9 @@
 import express from 'express' // express package to create a web server
 import mongoose from 'mongoose' // for MongoDB interactions
 import dotenv from 'dotenv' //  load environment variables
+import userRouter from './routes/user.route.js'
 
 dotenv.config() //Load environment variables from .env file
-
 
 const app = express() // Create an instance of an Express application
 
@@ -21,3 +21,5 @@ mongoose
 app.listen(3000, () => {
     console.log("server is running on port 3000")
 })
+
+app.use("/api/user", userRouter);
