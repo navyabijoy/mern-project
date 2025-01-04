@@ -28,7 +28,10 @@ export const signin = async(req,res,next) => {
         const validPassword = bcryptjs.compareSync(password, validUser.password)
         if (!validPassword) return next(errorHandler(401, 'Invalid password'))
         const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
-        const { password: pass, ...rest} = validUser._doc
+        const { password: pass, ...rest} = validUser._doc 
+        // uses object destructuring to extract password property form validUser._doc object while 
+        // keeping the rest of the properties in a new object called res
+        // Mongoose attaches a .doc property to documents, which contains the raw object representation of the data (excluding Mongoose-specific metadata).
         res
         .cookie('access_token',token, { httpOnly: true })
         .status(200)
