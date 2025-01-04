@@ -12,11 +12,11 @@ export default function Header() {
           </h1>
         </Link>
 
-        <form className='bg-slate-100 p-3 rounded-lg flex items-center'>
+        <form className='bg-white p-3 rounded-lg flex items-center'>
             <input
                 type="text"
                 placeholder="Search..."
-                className="bg-transparent focus:outline-none w-full sm:w-64" // Apply full width on small screens
+                className="bg-white focus:outline-none w-full sm:w-64" // Apply full width on small screens
             />
             <FaSearch className='text-gray-700' />
         </form>
