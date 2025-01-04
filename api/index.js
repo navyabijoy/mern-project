@@ -7,7 +7,6 @@ dotenv.config() //Load environment variables from .env file
 
 const app = express() // Create an instance of an Express application
 
-app.use(express.json()) // format the input in json
 mongoose
     .connect(process.env.MONGO) //if you are connected to mongo db then
     .then(() => {
@@ -16,6 +15,8 @@ mongoose
     .catch((err) => {
         console.log(err)
     })
+
+    app.use(express.json()) // format the input in json
 
 // start the server and listen on port 3000
 app.listen(3000, () => {
