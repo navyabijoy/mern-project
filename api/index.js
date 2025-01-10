@@ -3,6 +3,8 @@ import mongoose from 'mongoose' // for MongoDB interactions
 import dotenv from 'dotenv' //  load environment variables
 import userRouter from './routes/user.route.js'
 import authRouter from './routes/auth.route.js'
+import cookieParser from 'cookie-parser'
+
 dotenv.config() //Load environment variables from .env file
 
 const app = express() // Create an instance of an Express application
@@ -16,8 +18,8 @@ mongoose
         console.log(err)
     })
 
-    app.use(express.json()) // format the input in json
-
+app.use(express.json()) // format the input in json
+app.use(cookieParser())
 // start the server and listen on port 3000
 app.listen(3000, () => {
     console.log("server is running on port 3000")
