@@ -4,6 +4,7 @@ import dotenv from 'dotenv' //  load environment variables
 import userRouter from './routes/user.route.js'
 import authRouter from './routes/auth.route.js'
 import cookieParser from 'cookie-parser'
+import productRouter from './routes/product.route.js'
 
 dotenv.config() //Load environment variables from .env file
 
@@ -27,7 +28,7 @@ app.listen(3000, () => {
 
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter)
-
+app.use("/api/product", productRouter)
  // creating middleware
 app.use((err, req, res, next) => { 
     // err: error coming from input, next: to go to the next middleware
