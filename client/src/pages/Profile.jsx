@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import supabase from "../../supabase/supabaseClient.js";
 import { deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserFailure, signOutUserStart, signOutUserSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from "../redux/userSlice.js";
+import { Link } from 'react-router-dom';
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -186,6 +187,9 @@ export default function Profile() {
         <button disabled={loading} className="bg-burgundy/50 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">
           {loading ? 'Loading..' : 'Update'}
         </button>
+        <Link className='bg-green-700/30 text-white p-3 rounded-lg uppercase text-center hover:opacity-95' to={"/create-product"}>
+          Create Product
+        </Link>
       </form>
       <div className="flex justify-between mt-5">
         <span onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete account</span>
