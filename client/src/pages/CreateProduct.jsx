@@ -2,15 +2,31 @@ import { Upload } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import supabase from "../../supabase/supabaseClient";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateProduct() {
   const [files, setFiles] = useState([]);
-  const [formData, setFormData] = useState({ imageUrls: [] });
+  const [formData, setFormData] = useState({ 
+    imageUrls: [],
+    name: '',
+    description: '',
+    brand:'',
+    category:'',
+    condition:'',
+    swatchTimes: 0,
+    originalPrice: 5,
+    resalePrice: 3,
+    isAuthentic: true,
+  });
   const [imageUploadError, setImageUploadError] = useState(false);
   const [uploading, setUploading] = useState(false);
   const currentUser = useSelector((state) => state.user.currentUser);
+  const [error, setError ] = useState(false)
+  const [ loading, setLoading ] = useState(false)
 
   const userId = currentUser?._id;
+
+  const navigate = useNavigate()
 
   const handleImageSubmit = (e) => {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
@@ -76,12 +92,62 @@ export default function CreateProduct() {
       }
     });
   };
+
   const handleRemoveImage = (index) => {
     setFormData({
       ...formData,
       imageUrls: formData.imageUrls.filter((_, i) => i !== index),
     });
   };
+
+  const handleChange = (e) => {
+    if (e.target.id === 'isAuthentic') {
+      setFormData({
+        ...formData, 
+        isAuthentic: e.target.checked,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.value,
+      });
+    }
+    console.log('Updated formData:', formData); 
+  };
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+    try {
+      if (formData.imageUrls.length < 1)
+        return setError('You must upload at least one image')
+      if(+formData.originalPrice < +formData.resalePrice)
+        return setError('ReSale price must be lower than original price')
+      setLoading(true);
+      setError(false)
+
+      const res = await fetch('/api/product/create',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...formData,
+            userRef: currentUser._id,
+          })
+      })
+      const data = await res.json();
+      console.log('API Response:', data); 
+      setLoading(false)
+      if (data.success === false){
+        setError(data.message)
+      }
+      navigate(`/product/${data._id}`);
+      console.log(data._id)
+    } catch(error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  }
+
 
   return (
     <main className="p-4 md:p-6 max-w-5xl mx-auto">
@@ -92,7 +158,7 @@ export default function CreateProduct() {
       </div>
 
       <div className="p-6">
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
@@ -105,11 +171,14 @@ export default function CreateProduct() {
                 <input
                   type="text"
                   id="name"
+                  name="name"
                   placeholder="Enter product name"
                   className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-burg-500 focus:border-burg-500"
                   maxLength="62"
                   minLength="10"
                   required
+                  onChange={handleChange}
+                  value={formData.name}
                 />
               </div>
 
@@ -122,9 +191,12 @@ export default function CreateProduct() {
                 </label>
                 <textarea
                   id="description"
+                  name="description"
                   placeholder="Enter product description"
                   className="w-full rounded-lg border border-gray-300 p-3 h-32 focus:outline-none focus:ring-2 focus:ring-burg-500 focus:border-burg-500"
                   required
+                  onChange={handleChange}
+                  value={formData.description}
                 />
               </div>
 
@@ -137,8 +209,11 @@ export default function CreateProduct() {
                 </label>
                 <select
                   id="brand"
+                  name="brand"
                   className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-burg-500 focus:border-burg-500"
                   required
+                  onChange={handleChange}
+                  value={formData.brand}
                 >
                   <option value="" disabled>
                     Select a Brand
@@ -165,8 +240,11 @@ export default function CreateProduct() {
                 </label>
                 <select
                   id="category"
+                  name="category"
                   className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-burg-500 focus:border-burg-500"
                   required
+                  onChange={handleChange}
+                  value={formData.category}
                 >
                   <option value="" disabled>
                     Select a Category
@@ -191,9 +269,13 @@ export default function CreateProduct() {
                   </label>
                   <select
                     id="condition"
+                    name="condition"
                     className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-burg-500 focus:border-burg-500"
                     required
+                    onChange={handleChange}
+                    value={formData.condition}
                   >
+                    <option value="" disabled>Select a Condition</option> 
                     <option value="new">New</option>
                     <option value="lightlyUsed">Lightly Used</option>
                     <option value="used">Used</option>
@@ -210,10 +292,13 @@ export default function CreateProduct() {
                   <input
                     type="number"
                     id="swatchTimes"
+                    name="swatchTimes"
                     min="0"
                     max="5"
                     className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-burg-500 focus:border-burg-500"
                     required
+                    onChange={handleChange}
+                    value={formData.swatchTimes}
                   />
                 </div>
               </div>
@@ -233,9 +318,12 @@ export default function CreateProduct() {
                   <input
                     type="number"
                     id="originalPrice"
-                    min="1"
+                    name="originalPrice"
+                    min="5"
                     className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-burg-500 focus:border-burg-500"
                     required
+                    onChange={handleChange}
+                    value={formData.originalPrice}
                   />
                 </div>
 
@@ -249,9 +337,12 @@ export default function CreateProduct() {
                   <input
                     type="number"
                     id="resalePrice"
+                    name="resalePrice"
                     min="1"
                     className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-burg-500 focus:border-burg-500"
                     required
+                    onChange={handleChange}
+                    value={formData.resalePrice}
                   />
                 </div>
               </div>
@@ -260,7 +351,11 @@ export default function CreateProduct() {
                 <input
                   type="checkbox"
                   id="isAuthentic"
+                  name="isAuthentic"
                   className="w-5 h-5 rounded border-gray-300 text-burg-600 focus:ring-burg-500"
+                  onChange={handleChange}
+                  checked={formData.isAuthentic}
+                
                 />
                 <label
                   htmlFor="isAuthentic"
@@ -329,9 +424,12 @@ export default function CreateProduct() {
           <button
             type="submit"
             className="px-6 py-3 bg-burg-600 text-white rounded-lg hover:bg-burg-700 transition-colors focus:outline-none focus:ring-2 focus:ring-burg-500 focus:ring-offset-2"
+            disabled = {loading || uploading}
           >
-            Create Product
+            {loading? 'Creating..' : 'Create Product'}
           </button>
+          {error && <p className='text-red-700 text-sm'>{error}</p>}
+
           </div>
 
           </div>
