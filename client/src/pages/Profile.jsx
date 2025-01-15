@@ -15,7 +15,7 @@ export default function Profile() {
   const [updateSucess, setUpdateSuccess ] = useState(false);
   // console.log(formData)
 
-  // Use Firebase user ID directly for storage path
+  // use Firebase user ID directly for storage path
   const userId = currentUser?._id;
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function Profile() {
         }
       console.log("Upload successful:", data);
   
-      // Get the public URL of the uploaded file
+      // here we get the public URL of the uploaded file
       const { data: { publicUrl } } = await supabase.storage
         .from("user_uploads")
         .getPublicUrl(filePath);
@@ -187,7 +187,7 @@ export default function Profile() {
         <button disabled={loading} className="bg-burgundy/50 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">
           {loading ? 'Loading..' : 'Update'}
         </button>
-        <Link className='bg-green-700/30 text-white p-3 rounded-lg uppercase text-center hover:opacity-95' to={"/create-product"}>
+        <Link className='bg-slate-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95' to={"/create-product"}>
           Create Product
         </Link>
       </form>
