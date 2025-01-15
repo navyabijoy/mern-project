@@ -149,6 +149,23 @@ export default function Profile() {
       setShowProductError(true)
     }
   }
+  const handleProductDelete = async (productId) => {
+    try {
+      const res = await fetch(`/api/product/delete/${productId}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (data.success === false){
+        console.log(data.message)
+        return;
+    }
+    setUserProducts((prev) =>
+      prev.filter((product) => product._id !== productId)
+    )
+  } catch(error) {
+    console.log(error.message)
+    }
+  }
   
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -219,8 +236,7 @@ export default function Profile() {
       <p className="text-red-700 mt-5">
         {showProductError? 'Error showing products': ''}
       </p>
-      { userProducts &&
-      userProducts.length > 0 && 
+      { userProducts && userProducts.length > 0 && 
       <div className="flex flex-col gap-4">
         <h1 className="text-cetner mt-7 text-2xl font-semibold">Your Products</h1>
         {userProducts.map((product) => (
@@ -232,7 +248,7 @@ export default function Profile() {
             <p>{product.name}</p>
             </Link>
             <div className='flex flex-col item-center'>
-                <button className='text-red-700 uppercase'>Delete</button>
+                <button onClick={()=> handleProductDelete(product._id) }className='text-red-700 uppercase'>Delete</button>
                 <button className='text-green-700 uppercase'>Edit</button>
               </div>
             </div>

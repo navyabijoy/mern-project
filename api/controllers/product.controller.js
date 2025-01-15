@@ -9,3 +9,21 @@ export const createProduct = async(req,res,next) => {
         next(error)
     }
 }
+
+export const deleteProduct = async (req, res, next) => {
+    try {
+      const product = await Product.findById(req.params.id);
+      if (!product) {
+        return next(errorHandler(404, 'Product not found'));
+      }
+  
+      if (req.user.id !== product.userRef.toString()) {
+        return next(errorHandler(403, 'You are not authorized to delete this product'));
+      }
+  
+      await Product.findByIdAndDelete(req.params.id);
+      res.status(200).json('Product has been deleted!');
+    } catch (error) {
+      next(error);
+    }
+  };  
