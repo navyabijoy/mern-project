@@ -39,9 +39,10 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
-    images: {
-      type: Array, // Array of image URLs
+    imageUrls: {
+      type: [String], // Change Array to [String] for better type checking
       required: true,
+      default: [], // Add a default empty array
     },
     userRef: {
       type: String, // Reference to the User who listed the product

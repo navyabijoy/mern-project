@@ -40,14 +40,21 @@ export default function CreateProduct() {
   
       Promise.all(promises)
         .then((urls) => {
-          setFormData({
-            ...formData,
-            imageUrls: formData.imageUrls.concat(urls),
+          console.log('Uploaded URLs:', urls);
+          // Use functional update to ensure we're working with the latest state
+          setFormData(prevFormData => {
+            const updatedFormData = {
+              ...prevFormData,
+              imageUrls: [...prevFormData.imageUrls, ...urls]
+            };
+            console.log('Updated formData:', updatedFormData);
+            return updatedFormData;
           });
           setImageUploadError(false);
           setUploading(false);
         })
         .catch((err) => {
+          console.error('Upload error:', err);
           setImageUploadError('Image upload failed (2 mb max per image)');
           setUploading(false);
         });
@@ -112,41 +119,57 @@ export default function CreateProduct() {
         [e.target.name]: e.target.value,
       });
     }
-    console.log('Updated formData:', formData); 
+    console.log('Updated formData:', formData); // Add this to debug
   };
   const handleSubmit = async(e) => {
     e.preventDefault();
     try {
-      if (formData.imageUrls.length < 1)
-        return setError('You must upload at least one image')
-      if(+formData.originalPrice < +formData.resalePrice)
-        return setError('ReSale price must be lower than original price')
+      console.log('Submitting formData:', formData); // Debug log
+      
+      if (formData.imageUrls.length < 1) {
+        setError('You must upload at least one image');
+        return;
+      }
+  
+      if (+formData.originalPrice < +formData.resalePrice) {
+        setError('Resale price must be lower than original price');
+        return;
+      }
+  
       setLoading(true);
-      setError(false)
-
-      const res = await fetch('/api/product/create',{
+      setError(false);
+  
+      const productData = {
+        ...formData,
+        userRef: currentUser._id,
+      };
+  
+      console.log('Sending to API:', productData); // Debug log
+  
+      const res = await fetch('/api/product/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            ...formData,
-            userRef: currentUser._id,
-          })
-      })
+        },
+        body: JSON.stringify(productData)
+      });
+  
       const data = await res.json();
-      console.log('API Response:', data); 
-      setLoading(false)
-      if (data.success === false){
-        setError(data.message)
+      console.log('API Response:', data); // Debug log
+  
+      setLoading(false);
+      
+      if (data.success === false) {
+        setError(data.message);
+      } else {
+        navigate(`/product/${data._id}`);
       }
-      navigate(`/product/${data._id}`);
-      console.log(data._id)
     } catch(error) {
+      console.error('Submit error:', error);
       setError(error.message);
       setLoading(false);
     }
-  }
+  };
 
 
   return (
@@ -377,7 +400,7 @@ export default function CreateProduct() {
                     <input
                       onChange={(e) => setFiles(e.target.files)}
                       type="file"
-                      id="images"
+                      id="imageUrls"
                       accept="image/*"
                       multiple
                       className="w-full rounded-lg border border-gray-300 p-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-burg-50 file:text-burg-700 hover:file:bg-burg-100"
@@ -398,26 +421,37 @@ export default function CreateProduct() {
                 )}
             </div>
 
-            {formData.imageUrls.length > 0 &&
-            formData.imageUrls.map((url, index) => (
-              <div
-                key={url}
-                className='flex justify-between p-3 border items-center'
-              >
-                <img
-                  src={url}
-                  alt='listing image'
-                  className='w-20 h-20 object-contain rounded-lg'
-                />
-                <button
-                  type='button'
-                  onClick={() => handleRemoveImage(index)}
-                  className='p-3 text-red-700 rounded-lg uppercase hover:opacity-75'
-                >
-                  Delete
-                </button>
-              </div>
-            ))}     
+            {formData.imageUrls.length > 0 && (
+  <div className="space-y-4">
+    <p className="text-sm font-medium text-gray-700">Uploaded Images:</p>
+    <div className="grid grid-cols-2 gap-4">
+      {formData.imageUrls.map((url, index) => (
+        <div
+          key={url + index}
+          className='flex justify-between p-3 border items-center rounded-lg'
+        >
+          <img
+            src={url}
+            alt={`listing image ${index + 1}`}
+            className='w-20 h-20 object-contain rounded-lg'
+          />
+          <button
+            type='button'
+            onClick={() => {
+              setFormData(prev => ({
+                ...prev,
+                imageUrls: prev.imageUrls.filter((_, i) => i !== index)
+              }));
+            }}
+            className='p-3 text-red-700 rounded-lg uppercase hover:opacity-75'
+          >
+            Delete
+          </button>
+        </div>
+      ))}
+    </div>
+  </div>
+)}   
 
 
 

@@ -11,8 +11,10 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   const [fileUploadError, setFileUploadError] = useState(false);
   const [fileUploadSuccess, setFileUploadSuccess] = useState(false);
-  const dispatch = useDispatch()
   const [updateSucess, setUpdateSuccess ] = useState(false);
+  const [showProductError, setShowProductError ] = useState(false)
+  const [ userProducts , setUserProducts ] = useState([]); // we set it as an empty array
+  const dispatch = useDispatch();
   // console.log(formData)
 
   // use Firebase user ID directly for storage path
@@ -132,6 +134,21 @@ export default function Profile() {
     dispatch(signOutUserFailure(error.message))
   }
 }
+  const handleShowProducts = async() => {
+    try {
+      setShowProductError(false)
+      const res = await fetch (`/api/user/products/${currentUser._id}`)
+      const data = await res.json()
+      if(data.success === false) {
+        setShowProductError(true);
+        return
+      }
+      setUserProducts(data)
+      console.log(data)
+    } catch (error) {
+      setShowProductError(true)
+    }
+  }
   
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -198,6 +215,29 @@ export default function Profile() {
 
       <p className="text-red-700 mt-5">{error ? error : ''}</p>
       <p className="text-green-700 mt-5">{updateSucess ? 'User is updated successfully': ' '}</p>
+      <button onClick={handleShowProducts} className="text-burgundy w-full"> Show Products</button>
+      <p className="text-red-700 mt-5">
+        {showProductError? 'Error showing products': ''}
+      </p>
+      { userProducts &&
+      userProducts.length > 0 && 
+      <div className="flex flex-col gap-4">
+        <h1 className="text-cetner mt-7 text-2xl font-semibold">Your Products</h1>
+        {userProducts.map((product) => (
+          <div key={product._id} className="border rounded-lg p-3 flex justify-between items-center gap-4">
+            <Link to={`/product/${product._id}`}>
+            <img src={product.imageUrls[0]} alt="product cover" className="h-16 w-16 object-contain" />
+            </Link>
+            <Link className="text-slate-700 font-semibold hover:opacity-80 truncate flex-1" to={`/product/${product._id}`}>
+            <p>{product.name}</p>
+            </Link>
+            <div className='flex flex-col item-center'>
+                <button className='text-red-700 uppercase'>Delete</button>
+                <button className='text-green-700 uppercase'>Edit</button>
+              </div>
+            </div>
+          ))}
+        </div>}
     </div>
   );
 }
