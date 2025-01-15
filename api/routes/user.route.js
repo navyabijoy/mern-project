@@ -1,5 +1,5 @@
 import express from 'express'
-import { deleteUser, test, updateUser } from '../controllers/user.controller.js';
+import { deleteUser, getUserProducts, test, updateUser } from '../controllers/user.controller.js';
 import { verifyToken } from '../utils/verifyUser.js';
 
 const router = express.Router()
@@ -11,5 +11,5 @@ we use GET as we want to recieve the information */
 
 router.post('/update/:id',verifyToken,updateUser) // id here is 'params'
 router.delete('/delete/:id',verifyToken, deleteUser)
-
+router.get('/products/:id', verifyToken, getUserProducts)
 export default router;

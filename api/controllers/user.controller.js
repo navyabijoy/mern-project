@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import { errorHandler } from "../utils/error.js";
 import bcryptjs from 'bcryptjs'
+import Product from "../models/product.model.js";
 
 export const test = (req,res) => {
     res.json({
@@ -48,5 +49,19 @@ export const deleteUser = async(req, res, next) => {
     }
     catch(error){
         next(error)
+    }
+}
+
+export const getUserProducts = async(req,res,next) => {
+    if(req.user.id === req.params.id) {
+        try {
+            const products = await Product.find({ userRef: req.params.id })
+            res.status(200).json(products)
+        } catch (error) {
+            next(error)
+        }
+    }
+    else { // the user is not authenticated
+        return next(401, 'You can only view your own products!')
     }
 }
