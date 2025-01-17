@@ -1,4 +1,6 @@
 import Product from "../models/product.model.js";
+import { errorHandler } from "../utils/error.js";
+
 
 export const createProduct = async(req,res,next) => {
     try {
@@ -27,3 +29,23 @@ export const deleteProduct = async (req, res, next) => {
       next(error);
     }
   };  
+
+  export const updateProduct = async (req, res, next) => {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return next(errorHandler(404, 'Product not found!'));
+    }
+    if (req.user.id !== product.userRef) {
+      return next(errorHandler(401, 'You can only update your own products!'));
+    }
+    try {
+      const updateProduct = await Product.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true }
+      );
+      res.status(200).json(updateProduct);
+    } catch (error) {
+      next(error);
+    }
+  };
