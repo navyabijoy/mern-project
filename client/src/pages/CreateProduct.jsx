@@ -13,7 +13,7 @@ export default function CreateProduct() {
     brand: "",
     category: "",
     condition: "",
-    swatchTimes: 0,
+    swatchedTimes: 0,
     originalPrice: 5,
     resalePrice: 3,
     isAuthentic: true,
@@ -250,6 +250,8 @@ export default function CreateProduct() {
                   <option value="Huda Beauty">Huda Beauty</option>
                   <option value="Tarte">Tarte</option>
                   <option value="Charlotte Tilbury">Charlotte Tilbury</option>
+                  <option value="Rare Beauty">Rare Beauty</option>
+
                 </select>
               </div>
 
@@ -300,29 +302,29 @@ export default function CreateProduct() {
                     <option value="" disabled>
                       Select a Condition
                     </option>
-                    <option value="new">New</option>
-                    <option value="lightlyUsed">Lightly Used</option>
-                    <option value="used">Used</option>
+                    <option value="New">New</option>
+                    <option value="Lightly Used">Lightly Used</option>
+                    <option value="Used">Used</option>
                   </select>
                 </div>
 
                 <div>
                   <label
-                    htmlFor="swatchTimes"
+                    htmlFor="swatchedTimes"
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
                     Swatch Times
                   </label>
                   <input
                     type="number"
-                    id="swatchTimes"
-                    name="swatchTimes"
+                    id="swatchedTimes"
+                    name="swatchedTimes"
                     min="0"
                     max="5"
                     className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-burg-500 focus:border-burg-500"
                     required
                     onChange={handleChange}
-                    value={formData.swatchTimes}
+                    value={formData.swatchedTimes}
                   />
                 </div>
               </div>
