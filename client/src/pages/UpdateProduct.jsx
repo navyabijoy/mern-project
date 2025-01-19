@@ -1,10 +1,10 @@
 import { Upload } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import supabase from "../../supabase/supabaseClient";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-export default function CreateProduct() {
+export default function UpdateProduct() {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
     imageUrls: [],
@@ -23,6 +23,21 @@ export default function CreateProduct() {
   const currentUser = useSelector((state) => state.user.currentUser);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const params = useParams()
+
+  useEffect(() => {
+      const fetchProduct = async() => {
+          const productId = params.productId;
+          const res = await fetch(`/api/product/get/${productId}`);
+          const data = await res.json();
+          if (data.success === false){ // if the response has an error
+              console.log(data.message)
+              return
+          }
+          setFormData(data)
+      }
+      fetchProduct()
+  }, []);
 
   const userId = currentUser?._id;
 
@@ -100,12 +115,12 @@ export default function CreateProduct() {
     });
   };
 
-  // const handleRemoveImage = (index) => {
-  //   setFormData({
-  //     ...formData,
-  //     imageUrls: formData.imageUrls.filter((_, i) => i !== index),
-  //   });
-  // };
+    const handleRemoveImage = (index) => {
+      setFormData({
+        ...formData,
+        imageUrls: formData.imageUrls.filter((_, i) => i !== index),
+      });
+    };
 
   const handleChange = (e) => {
     if (e.target.id === "isAuthentic") {
@@ -146,7 +161,7 @@ export default function CreateProduct() {
 
       console.log("Sending to API:", productData); // Debug log
 
-      const res = await fetch("/api/product/create", {
+      const res = await fetch(`/api/product/update/${params.productId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -175,7 +190,7 @@ export default function CreateProduct() {
     <main className="p-4 md:p-6 max-w-5xl mx-auto">
       <div className="p-6 border-gray-200">
         <h1 className="text-2xl md:text-3xl font-semibold text-center text-gray-800">
-          Create a Product
+          Update a Product
         </h1>
       </div>
 
@@ -438,18 +453,12 @@ export default function CreateProduct() {
                         <button
                           type="button"
                           onClick={() => {
-                            setFormData((prev) => ({
-                              ...prev,
-                              imageUrls: prev.imageUrls.filter(
-                                (_, i) => i !== index
-                              ),
-                            }));
+                            handleRemoveImage(index);
                           }}
                           className="p-3 text-red-700 rounded-lg uppercase hover:opacity-75"
                         >
                           Delete
                         </button>
-                        
                       </div>
                     ))}
                   </div>
@@ -461,7 +470,7 @@ export default function CreateProduct() {
                 className="px-6 py-3 bg-burg-600 text-white rounded-lg hover:bg-burg-700 transition-colors focus:outline-none focus:ring-2 focus:ring-burg-500 focus:ring-offset-2"
                 disabled={loading || uploading}
               >
-                {loading ? "Creating.." : "Create Product"}
+                {loading ? "Creating.." : "Update Product"}
               </button>
               {error && <p className="text-red-700 text-sm">{error}</p>}
             </div>
