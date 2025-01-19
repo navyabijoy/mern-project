@@ -9,6 +9,7 @@ import PrivateRoute from './components/PrivateRoute';
 import CreateProduct from './pages/CreateProduct';
 import UpdateProduct from './pages/UpdateProduct';
 import Product from './pages/Product';
+import Search from './pages/Search';
 export default function App() {
   return (
     <BrowserRouter>
@@ -19,7 +20,7 @@ export default function App() {
       <Route path="/sign-in" element={<SignIn />} />
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/product/:productId" element={<Product />} />
-
+      <Route path="/search" element={<Search />} />
       <Route element={<PrivateRoute />}>
          <Route path="/profile" element={<Profile />} /> {/*children of PrivateRoute component */}
          <Route path="/create-product" element={<CreateProduct />} />
