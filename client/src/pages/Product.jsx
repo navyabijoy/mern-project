@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore from 'swiper';
-import { Navigation } from 'swiper/modules';
-import 'swiper/css/bundle';
+import { Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 export default function Product() {
   const [product, setProduct] = useState(null);
@@ -36,11 +37,11 @@ export default function Product() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        {/* <header className="bg-white shadow">
+        <header className="bg-white shadow">
           <div className="max-w-7xl mx-auto py-6 px-4">
             <h1 className="text-3xl font-bold text-gray-900">Loading...</h1>
           </div>
-        </header> */}
+        </header>
         <main className="flex justify-center items-center min-h-[calc(100vh-200px)]">
           <p className="text-2xl text-gray-600">Loading product details...</p>
         </main>
@@ -51,11 +52,11 @@ export default function Product() {
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50">
-        {/* <header className="bg-white shadow">
+        <header className="bg-white shadow">
           <div className="max-w-7xl mx-auto py-6 px-4">
             <h1 className="text-3xl font-bold text-gray-900">Error</h1>
           </div>
-        </header> */}
+        </header>
         <main className="flex justify-center items-center min-h-[calc(100vh-200px)]">
           <p className="text-2xl text-red-600">Something went wrong!</p>
         </main>
@@ -66,11 +67,11 @@ export default function Product() {
   if (!product) {
     return (
       <div className="min-h-screen bg-gray-50">
-        {/* <header className="bg-white shadow">
+        <header className="bg-white shadow">
           <div className="max-w-7xl mx-auto py-6 px-4">
             <h1 className="text-3xl font-bold text-gray-900">Product Not Found</h1>
           </div>
-        </header> */}
+        </header>
         <main className="flex justify-center items-center min-h-[calc(100vh-200px)]">
           <p className="text-2xl text-gray-600">The requested product could not be found</p>
         </main>
@@ -80,14 +81,7 @@ export default function Product() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      {/* <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4">
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-gray-900">Product Details</h1>
-          </div>
-        </div>
-      </header> */}
+      
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -107,15 +101,20 @@ export default function Product() {
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {/* Left Column - Image Gallery */}
             <div className="p-6 border-b lg:border-b-0 lg:border-r border-gray-200">
-              <Swiper navigation className="rounded-lg overflow-hidden">
+              <Swiper
+                modules={[Navigation, Pagination]}
+                navigation={true}
+                pagination={{ clickable: true }}
+                spaceBetween={0}
+                slidesPerView={1}
+                className="rounded-lg product-swiper"
+              >
                 {product.imageUrls.map((url) => (
                   <SwiperSlide key={url}>
-                    <div
-                      className="h-[550px]"
-                      style={{
-                        background: `url(${url}) center no-repeat`,
-                        backgroundSize: 'cover',
-                      }}
+                    <img 
+                      src={url} 
+                      alt={product.name}
+                      className="w-full h-[550px] object-cover rounded-lg"
                     />
                   </SwiperSlide>
                 ))}
@@ -126,11 +125,11 @@ export default function Product() {
             <div className="p-6">
               <div className="space-y-6">
                 {/* Product Title Section */}
-                <p className="text-sm place-items-baseline text-gray-500">ID: {params.productId}</p>
-
                 <div className="border-b border-gray-200 pb-6">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">{product.name}</h2>
-                  <p className="text-lg text-gray-600">{product.brand}</p>
+                <p className="text-xs text-gray-500">ID: {params.productId}</p>
+                  <h2 className="text-2xl font-bold mt-3 text-gray-900 ">{product.name}</h2>
+                  <p className="text-lg text-gray-600">{product.brand}</p>            
+
                 </div>
 
                 {/* Price Section */}
@@ -157,7 +156,7 @@ export default function Product() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Times Swatched</p>
-                    <p className="mt-1 font-medium">{product.swatchedTimes} times</p>
+                    <p className="mt-1 font-medium">{product.swatchedTimes || 0} times</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Authenticity</p>
@@ -171,20 +170,16 @@ export default function Product() {
                   <p className="text-gray-700 whitespace-pre-line">{product.description}</p>
                 </div>
               </div>
+              
             </div>
           </div>
           <div className="max-w-7xl mx-auto py-4 px-4 text-center text-sm text-gray-500">
-          Listed on {new Date().toLocaleDateString()}
+          Listed on {new Date(product.createdAt).toLocaleDateString()}
         </div>
         </div>
       </main>
 
-      {/* Footer */}
-      {/* <footer className="bg-white shadow mt-8">
-        <div className="max-w-7xl mx-auto py-4 px-4 text-center text-sm text-gray-500">
-          Listed on {new Date().toLocaleDateString()}
-        </div>
-      </footer> */}
+      
     </div>
   );
 }
