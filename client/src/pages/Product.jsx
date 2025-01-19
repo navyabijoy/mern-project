@@ -5,12 +5,18 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { Link } from "react-router-dom";
+import Contact from "../components/Contact";
+import { useSelector } from "react-redux";
 
 export default function Product() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [contact, setContact] = useState(null);
   const params = useParams();
+
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -37,11 +43,6 @@ export default function Product() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow">
-          <div className="max-w-7xl mx-auto py-6 px-4">
-            <h1 className="text-3xl font-bold text-gray-900">Loading...</h1>
-          </div>
-        </header>
         <main className="flex justify-center items-center min-h-[calc(100vh-200px)]">
           <p className="text-2xl text-gray-600">Loading product details...</p>
         </main>
@@ -52,11 +53,6 @@ export default function Product() {
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow">
-          <div className="max-w-7xl mx-auto py-6 px-4">
-            <h1 className="text-3xl font-bold text-gray-900">Error</h1>
-          </div>
-        </header>
         <main className="flex justify-center items-center min-h-[calc(100vh-200px)]">
           <p className="text-2xl text-red-600">Something went wrong!</p>
         </main>
@@ -67,11 +63,6 @@ export default function Product() {
   if (!product) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow">
-          <div className="max-w-7xl mx-auto py-6 px-4">
-            <h1 className="text-3xl font-bold text-gray-900">Product Not Found</h1>
-          </div>
-        </header>
         <main className="flex justify-center items-center min-h-[calc(100vh-200px)]">
           <p className="text-2xl text-gray-600">The requested product could not be found</p>
         </main>
@@ -81,14 +72,10 @@ export default function Product() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      
-
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
         <nav className="mb-8">
           <ol className="flex items-center space-x-2 text-sm text-gray-500">
-            <li>Home</li>
+            <Link to="/" className="text-burg-600"><li>Home</li></Link>
             <li>/</li>
             <li>{product.category}</li>
             <li>/</li>
@@ -96,10 +83,8 @@ export default function Product() {
           </ol>
         </nav>
 
-        {/* Product Content */}
         <div className="bg-white rounded-lg shadow">
           <div className="grid grid-cols-1 lg:grid-cols-2">
-            {/* Left Column - Image Gallery */}
             <div className="p-6 border-b lg:border-b-0 lg:border-r border-gray-200">
               <Swiper
                 modules={[Navigation, Pagination]}
@@ -121,18 +106,14 @@ export default function Product() {
               </Swiper>
             </div>
 
-            {/* Right Column - Product Info */}
             <div className="p-6">
               <div className="space-y-6">
-                {/* Product Title Section */}
                 <div className="border-b border-gray-200 pb-6">
-                <p className="text-xs text-gray-500">ID: {params.productId}</p>
-                  <h2 className="text-2xl font-bold mt-3 text-gray-900 ">{product.name}</h2>
+                  <p className="text-xs text-gray-500">ID: {params.productId}</p>
+                  <h2 className="text-2xl font-bold mt-3 text-gray-900">{product.name}</h2>
                   <p className="text-lg text-gray-600">{product.brand}</p>            
-
                 </div>
 
-                {/* Price Section */}
                 <div className="flex justify-between items-center py-4">
                   <div>
                     <p className="text-sm text-gray-500">Original Price</p>
@@ -144,7 +125,6 @@ export default function Product() {
                   </div>
                 </div>
 
-                {/* Product Details Grid */}
                 <div className="grid grid-cols-2 gap-6 py-4 border-t border-gray-200">
                   <div>
                     <p className="text-sm text-gray-500">Category</p>
@@ -164,22 +144,31 @@ export default function Product() {
                   </div>
                 </div>
 
-                {/* Description Section */}
                 <div className="border-t border-gray-200 pt-6">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Description</h3>
                   <p className="text-gray-700 whitespace-pre-line">{product.description}</p>
                 </div>
+
+                {currentUser && currentUser.id !== product.userRef && !contact && (
+                  <div className="pt-6">
+                    <button 
+                      onClick={() => setContact(true)} 
+                      className="w-full bg-burg-600 text-white py-3 px-6 rounded-lg uppercase font-medium shadow-sm hover:bg-burg-700 focus:outline-none focus:ring-2 focus:ring-burg-500 focus:ring-offset-2 transition-colors duration-200"
+                    >
+                      Contact Seller
+                    </button>
+                  </div>
+                )}
+                {contact && <Contact product={product} />}
               </div>
-              
             </div>
           </div>
+          
           <div className="max-w-7xl mx-auto py-4 px-4 text-center text-sm text-gray-500">
-          Listed on {new Date(product.createdAt).toLocaleDateString()}
-        </div>
+            Listed on {new Date(product.createdAt).toLocaleDateString()}
+          </div>
         </div>
       </main>
-
-      
     </div>
   );
 }
