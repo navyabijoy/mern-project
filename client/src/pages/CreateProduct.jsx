@@ -243,6 +243,7 @@ export default function CreateProduct() {
                   <option value="Maybelline">Maybelline</option>
                   <option value="MAC">MAC</option>
                   <option value="NYX">NYX</option>
+                  <option value="Rhode">Rhode</option>
                   <option value="Fenty Beauty">Fenty Beauty</option>
                   <option value="Estee Lauder">Estée Lauder</option>
                   <option value="Dior">Dior</option>

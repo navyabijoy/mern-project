@@ -149,7 +149,7 @@ export default function Product() {
                   <p className="text-gray-700 whitespace-pre-line">{product.description}</p>
                 </div>
 
-                {currentUser && currentUser.id !== product.userRef && !contact && (
+                {currentUser && currentUser.id != product.userRef && !contact && (
                   <div className="pt-6">
                     <button 
                       onClick={() => setContact(true)} 

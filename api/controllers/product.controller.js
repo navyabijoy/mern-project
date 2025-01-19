@@ -62,3 +62,60 @@ export const deleteProduct = async (req, res, next) => {
       next(error)
     }
   }
+  
+  export const getProducts = async (req, res, next) => {
+    try {
+      const limit = parseInt(req.query.limit) || 10;
+      const startIndex = parseInt(req.query.startIndex) || 0;
+      
+      const searchTerm = req.query.searchTerm || '';
+      const category = req.query.category || '';
+      const brand = req.query.brand || '';
+      const sort = req.query.sort || 'createdAt';
+      const order = req.query.order || 'desc';
+      const minPrice = parseInt(req.query.minPrice) || 0;
+      const maxPrice = parseInt(req.query.maxPrice) || 1000000;
+      const condition = req.query.condition || '';
+  
+      const searchQuery = {
+        $or: [
+          { name: { $regex: searchTerm, $options: 'i' } },
+          { description: { $regex: searchTerm, $options: 'i' } },
+          { brand: { $regex: searchTerm, $options: 'i' } }
+        ],
+        resalePrice: { $gte: minPrice, $lte: maxPrice }
+      };
+  
+      if (category) {
+        searchQuery.category = category;
+      }
+  
+      if (brand) {
+        searchQuery.brand = brand;
+      }
+  
+      if (condition) {
+        searchQuery.condition = condition;
+      }
+  
+      const products = await Product.find(searchQuery)
+        .sort({ [sort]: order })
+        .limit(limit)
+        .skip(startIndex);
+  
+      const total = await Product.countDocuments(searchQuery);
+  
+      const response = {
+        products,
+        total,
+        hasMore: startIndex + products.length < total,
+        currentPage: Math.floor(startIndex / limit) + 1,
+        totalPages: Math.ceil(total / limit)
+      };
+  
+      return res.status(200).json(response);
+  
+    } catch (error) {
+      next(error);
+    }
+  };
