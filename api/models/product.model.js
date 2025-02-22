@@ -29,7 +29,7 @@ const productSchema = new mongoose.Schema(
     swatchedTimes: {
       type: Number,
       required: false,
-      default: 0, // default value if not provided
+      default: 0,
     },
     condition: {
       type: String,
@@ -40,16 +40,16 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
     imageUrls: {
-      type: [String], // Change Array to [String] for better type checking
+      type: [String], 
       required: true,
-      default: [], // Add a default empty array
+      default: [], 
     },
     userRef: {
-      type: String, // Reference to the User who listed the product
+      type: String,
       required: true,
     },
   },
-  { timestamps: true } // Automatically add createdAt and updatedAt fields
+  { timestamps: true } 
 );
 
 const Product = mongoose.model('Product', productSchema);
