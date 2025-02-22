@@ -10,6 +10,7 @@ import CreateProduct from './pages/CreateProduct';
 import UpdateProduct from './pages/UpdateProduct';
 import Product from './pages/Product';
 import Search from './pages/Search';
+import Footer from './components/Footer';
 export default function App() {
   return (
     <BrowserRouter>
@@ -27,6 +28,7 @@ export default function App() {
         <Route path="/update-product/:productId" element={<UpdateProduct />} />
       </Route>
     </Routes>
+    <Footer />
     </BrowserRouter>
   )
 }
