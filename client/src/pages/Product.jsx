@@ -5,7 +5,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import Contact from "../components/Contact";
 import { useSelector } from "react-redux";
 
@@ -73,7 +73,7 @@ export default function Product() {
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <nav className="mb-8">
+        {/* <nav className="mb-8">
           <ol className="flex items-center space-x-2 text-sm text-gray-500">
             <Link to="/" className="text-burg-600"><li>Home</li></Link>
             <li>/</li>
@@ -81,9 +81,9 @@ export default function Product() {
             <li>/</li>
             <li className="text-burg-600">{product.name}</li>
           </ol>
-        </nav>
+        </nav> */}
 
-        <div className="bg-white rounded-lg shadow">
+        <div >
           <div className="grid grid-cols-1 lg:grid-cols-2">
             <div className="p-6 border-b lg:border-b-0 lg:border-r border-gray-200">
               <Swiper
