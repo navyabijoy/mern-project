@@ -17,7 +17,7 @@ export default function Home() {
   useEffect(() => {
     const fetchmakeupProducts = async () => {
       try{
-        const res = await fetch('/api/product/get?category=Makeup&limit=5')
+        const res = await fetch('/api/product/get?category=Makeup&limit=4')
         const data = await res.json()
         setMakeupProducts(data.products)
         
@@ -29,7 +29,7 @@ export default function Home() {
 
     const fetchskinCareProducts = async () => {
       try{
-        const res = await fetch('/api/product/get?category=Skincare&limit=5')
+        const res = await fetch('/api/product/get?category=Skincare&limit=4')
         const data = await res.json()
         setSkincareProducts(data.products)
         return fetchhairProducts()
@@ -39,7 +39,7 @@ export default function Home() {
     }
     const fetchhairProducts = async () => {
       try{
-        const res = await fetch('/api/product/get?category=Haircare&limit=5')
+        const res = await fetch('/api/product/get?category=Haircare&limit=4')
         const data = await res.json()
         setHairProducts(data.products)
         return fetchbodyProducts()
@@ -49,7 +49,7 @@ export default function Home() {
       }
       const fetchbodyProducts = async () => {
         try{
-          const res = await fetch('/api/product/get?category=Body Care&limit=5')
+          const res = await fetch('/api/product/get?category=Body Care&limit=4')
           const data = await res.json()
           setBodyProducts(data.products)
           return fetchperfumeProducts()
@@ -59,7 +59,7 @@ export default function Home() {
       }
       const fetchperfumeProducts = async () => {
         try{
-          const res = await fetch('/api/product/get?category=Fragrances&limit=5')
+          const res = await fetch('/api/product/get?category=Fragrances&limit=4')
           const data = await res.json()
           setPerfumeProducts(data.products)
           return fetchToolsProducts()
@@ -70,7 +70,7 @@ export default function Home() {
       }
       const fetchToolsProducts = async () => {
         try {
-        const res = await fetch('/api/product/get?category=Tools & Accessories&limit=5')
+        const res = await fetch('/api/product/get?category=Tools & Accessories&limit=4')
         const data = await res.json()
         setToolsProducts(data.products)
         } catch(error){
