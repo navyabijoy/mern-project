@@ -1,5 +1,4 @@
 // to check if the user token is valid or not
-import React from 'react'
 import { errorHandler } from './error.js'
 import  jwt  from 'jsonwebtoken'
 
