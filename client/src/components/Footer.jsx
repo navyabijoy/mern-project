@@ -8,8 +8,8 @@ export default function Footer() {
         <div>
         <Link to='/'>
           <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
-            <span className="text-burgundy/55">Face</span>
-            <span className='text-burgundy/85'>Beauty</span> 
+            <span className="text-burgundy/35">Face</span>
+            <span className='text-burgundy/45'>Beauty</span> 
           </h1>
         </Link>
           <p className="text-sm mt-2">
@@ -17,15 +17,15 @@ export default function Footer() {
           </p>
         </div>
 
-        <div>
+        {/* <div>
           <h3 className="text-lg font-semibold text-white">Quick Links</h3>
           <ul className="mt-2 space-y-2">
             <li><a href="/" className="hover:text-burg-500">Home</a></li>
-            <li><a href="/about" className="hover:text-burg-500">About</a></li>
-            <li><a href="/products" className="hover:text-burg-500">Products</a></li>
-            <li><a href="/contact" className="hover:text-burg-500">Contact</a></li>
+            <li><a href="/apg/about" className="hover:text-burg-500">About</a></li>
+            {/* <li><a href="/products" className="hover:text-burg-500">Products</a></li>
+            <li><a href="/contact" className="hover:text-burg-500">Contact</a></li> 
           </ul>
-        </div>
+        </div> */}
 
         <div>
           <h3 className="text-lg font-semibold text-white">Follow Us</h3>
@@ -43,12 +43,12 @@ export default function Footer() {
               <FaLinkedin size={20} />
             </a>
           </div>
-          <p className="text-sm mt-2">Email: support@brandname.com</p>
+          <p className="text-sm mt-2">Email: support@facebeauty.com</p>
         </div>
       </div>
 
       <div className="border-t border-gray-700 mt-6 text-center pt-4 text-sm">
-        <p>&copy; {new Date().getFullYear()} BrandName. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Face Beauty. All rights reserved.</p>
       </div>
     </footer>
   );
