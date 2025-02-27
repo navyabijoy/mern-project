@@ -5,6 +5,7 @@ import userRouter from './routes/user.route.js'
 import authRouter from './routes/auth.route.js'
 import cookieParser from 'cookie-parser'
 import productRouter from './routes/product.route.js'
+import path from 'path'
 
 dotenv.config() //Load environment variables from .env file
 
@@ -19,7 +20,7 @@ mongoose
         console.log(err)
     })
 
-    const __dirname = path.resolve();
+const __dirname = path.resolve();
 
 app.use(express.json()) // format the input in json
 app.use(cookieParser())
