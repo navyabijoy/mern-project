@@ -19,6 +19,8 @@ mongoose
         console.log(err)
     })
 
+    const __dirname = path.resolve();
+
 app.use(express.json()) // format the input in json
 app.use(cookieParser())
 // start the server and listen on port 3000
@@ -29,6 +31,12 @@ app.listen(3000, () => {
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter)
 app.use("/api/product", productRouter)
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+app.get('*', (req,res) => {
+    res.sendFile(path.join(__dirname, 'client','dist','index.html'));
+})
+
  // creating middleware
 app.use((err, req, res, next) => { 
     // err: error coming from input, next: to go to the next middleware
