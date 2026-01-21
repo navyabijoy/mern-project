@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export default function ProductItem({ product }) {
+export default function ProductItem({ product, disableFixedWidth = false }) {
   if (!product) return null;
   const truncateDescription = (text, wordLimit) => {
     if(!text) return 'No Description Available';
@@ -8,7 +8,7 @@ export default function ProductItem({ product }) {
     return words.length > wordLimit? words.slice(0, wordLimit).join(' ') + '...': text;
   }
   return (
-    <div className="bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px] border border-gray-200">
+    <div className={`bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full ${disableFixedWidth ? '' : 'sm:w-[330px]'} border border-gray-200`}>
       <Link to={`/product/${product._id}`} className="block">
         <div className="relative">
           <img

@@ -11,13 +11,13 @@ export default function Header() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set('SearchTerm', searchTerm);
+    urlParams.set('searchTerm', searchTerm);
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
   }
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const term = urlParams.get('SearchTerm');
+    const term = urlParams.get('searchTerm');
     if (term) {
       setSearchTerm(term);
     }
@@ -27,9 +27,9 @@ export default function Header() {
     <header className='bg-coral/35 shadow-sm'>
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
         <Link to='/'>
-          <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
-            <span className="text-burgundy/55">Face</span>
-            <span className='text-burgundy/85'>Beauty</span> 
+          <h1 className='font-bold text-sm sm:text-xl flex flex-wrap tracking-tight'>
+            <span className="text-burgundy/85 italic">En</span>
+            <span className='text-burgundy/55'>core</span> 
           </h1>
         </Link>
 

@@ -7,7 +7,7 @@ export default function Search() {
   const [sidebardata, setSidebardata] = useState({
     searchTerm: '',
     category: 'all',
-    conditions: [],  // Changed to array for multiple selections
+    conditions: [], 
     brand: 'all',
     sort_order: 'createdAt_desc',
   });
@@ -15,6 +15,7 @@ export default function Search() {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [showMore, setShowMore] = useState(false);
+  const [useSemanticSearch, setUseSemanticSearch] = useState(false);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -40,25 +41,41 @@ export default function Search() {
       });
     }
 
+
     const fetchProducts = async () => {
       setLoading(true);
       setShowMore(false);
-      const searchQuery = urlParams.toString();
+      
       try {
-        const res = await fetch(`/api/product/get?${searchQuery}`);
-        const data = await res.json();
-        if (data.products) {
-          setShowMore(data.hasMore);
-          setProducts(data.products);
+        let res, data;
+        
+        // Use semantic search if enabled and there's a search term
+        if (useSemanticSearch && searchTermFromUrl && searchTermFromUrl.trim() !== '') {
+          res = await fetch(`/api/product/semantic-search?q=${encodeURIComponent(searchTermFromUrl)}&limit=20`);
+          data = await res.json();
+          if (Array.isArray(data)) {
+            setProducts(data);
+            setShowMore(false);
+          }
+        } else {
+          // Use regular keyword search
+          const searchQuery = urlParams.toString();
+          res = await fetch(`/api/product/get?${searchQuery}`);
+          data = await res.json();
+          if (data.products) {
+            setShowMore(data.hasMore);
+            setProducts(data.products);
+          }
         }
       } catch (error) {
         console.error('Error fetching products:', error);
+        setProducts([]);
       }
       setLoading(false);
     };
 
     fetchProducts();
-  }, [location.search]);
+  }, [location.search, useSemanticSearch]);
 
   const handleChange = (e) => {
     if (e.target.id === 'searchTerm') {
@@ -69,8 +86,7 @@ export default function Search() {
       setSidebardata({ ...sidebardata, [e.target.id]: e.target.value });
     }
 
-    // Handle condition checkboxes
-    if (['new', 'Lightly Used', 'Used'].includes(e.target.id)) {
+    if (['New', 'Lightly Used', 'Used'].includes(e.target.id)) {
       const updatedConditions = [...sidebardata.conditions];
       if (e.target.checked) {
         if (!updatedConditions.includes(e.target.id)) {
@@ -141,6 +157,20 @@ export default function Search() {
             />
           </div>
 
+          <div className='flex items-center gap-2 bg-blue-50 p-3 rounded-lg'>
+            <input
+              type='checkbox'
+              id='semanticSearch'
+              checked={useSemanticSearch}
+              onChange={(e) => setUseSemanticSearch(e.target.checked)}
+              className='w-5 h-5'
+            />
+            <label htmlFor='semanticSearch' className='text-sm'>
+              <span className='font-semibold'>🧠 Smart Search</span>
+              <span className='text-gray-600 block text-xs'>Search by meaning (e.g., "bridal makeup" finds elegant wedding products)</span>
+            </label>
+          </div>
+
           <div className='flex flex-col gap-2'>
             <label className='font-semibold'>Category:</label>
             <select
@@ -164,8 +194,8 @@ export default function Search() {
             <div className='flex gap-2'>
               <input
                 type='checkbox'
-                id='new'
-                checked={sidebardata.conditions.includes('new')}
+                id='New'
+                checked={sidebardata.conditions.includes('New')}
                 onChange={handleChange}
                 className='w-5'
               />

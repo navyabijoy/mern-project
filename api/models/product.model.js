@@ -48,6 +48,11 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    embedding: {
+      type: [Number],
+      required: false,
+      default: [],
+    },
   },
   { timestamps: true } 
 );

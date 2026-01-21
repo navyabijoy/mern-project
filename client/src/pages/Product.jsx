@@ -7,6 +7,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 // import { Link } from "react-router-dom";
 import Contact from "../components/Contact";
+import SimilarProducts from "../components/SimilarProducts";
 import { useSelector } from "react-redux";
 
 export default function Product() {
@@ -164,10 +165,12 @@ export default function Product() {
             </div>
           </div>
           
-          <div className="max-w-7xl mx-auto py-4 px-4 text-center text-sm text-gray-500">
+          <div className="max-w-7xl mx-auto pt-4 pb-12 px-4 text-center text-sm text-gray-500">
             Listed on {new Date(product.createdAt).toLocaleDateString()}
           </div>
         </div>
+        
+        <SimilarProducts productId={params.productId} />
       </main>
     </div>
   );
